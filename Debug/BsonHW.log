@@ -1,4 +1,4 @@
-﻿Сборка начата 01.03.2015 21:36:34.
+﻿Сборка начата 09.03.2015 19:32:05.
      1>Проект "D:\Programming\2SemmProject\BsonHW\BsonHW.vcxproj" в узле 2 (целевые объекты Build).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\libs\boost\include\boost-1_57" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
@@ -10,4 +10,4 @@
 
 Сборка успешно завершена.
 
-Затраченное время: 00:00:05.51
+Затраченное время: 00:00:04.55
