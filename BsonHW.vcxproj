@@ -14,6 +14,7 @@
     <ProjectGuid>{CF86F9D1-4E89-403D-A62F-3A9A645323C7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>BsonHW</RootNamespace>
+    <ProjectName>DirectoryFileSearcher</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
