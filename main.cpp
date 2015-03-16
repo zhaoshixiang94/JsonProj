@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include "sha256.h"
 
 using namespace std;
 using namespace boost::filesystem;
@@ -24,6 +26,17 @@ path main_path_get(){
 	return p;
 } 
 
+string hash_counter(string file_path){
+	SHA256 sha256;
+	string file_text = {};
+	ifstream c_file;// for openning file and hash it 
+	c_file.open(file_path, ifstream::in);
+	while (!c_file.eof()){
+		file_text += c_file.get();
+	}
+	return sha256(file_text);
+}
+
 void dir_runner(path main_p, ptree &pt){
 	for (directory_iterator dir_itr(main_p);
 		dir_itr != directory_iterator();
@@ -36,6 +49,7 @@ void dir_runner(path main_p, ptree &pt){
 				<< " FILENAME : "<< p.filename() << endl;*/
 				ptree current_file;
 				current_file.put("FILENAME", p.filename().string());
+				current_file.put("File Hash in SHA2 ( 256 ) Format", hash_counter(p.string()));
 				current_file.put("File Size (Bytes)  ", file_size(*dir_itr) );
 				current_file.put("File Path", p.string());
 				pt.push_back(make_pair("", current_file));
