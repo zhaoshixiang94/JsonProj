@@ -1,14 +1,19 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <filesystem>
+#include <algorithm>
 #include <boost/filesystem.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include "sha256.h"
+#include <boost/lexical_cast.hpp>
+#include"adler32.h"
+//#include <boost/property_tree/ptree.hpp>
+//#include <boost/property_tree/json_parser.hpp>
+//#include "sha256.h"
 
 using namespace std;
 using namespace boost::filesystem;
-using boost::property_tree::ptree;
+using namespace boost::algorithm;
+//using boost::property_tree::ptree;
 
 path main_path_get(){
 	path p;
@@ -26,15 +31,22 @@ path main_path_get(){
 	return p;
 } 
 
-string hash_counter(string file_path){
-	SHA256 sha256;
+//string hash_counter(string file_path){
+//	SHA256 sha256;
+	unsigned long hash_counter(string file_path) 
+{
 	string file_text = {};
 	ifstream c_file;// for openning file and hash it 
 	c_file.open(file_path, ifstream::in);
 	while (!c_file.eof()){
 		file_text += c_file.get();
 	}
-	return sha256(file_text);
+	int length = file_text.size();
+	char* v = (char*)file_text.c_str();
+	unsigned char* str = (unsigned char*)v;
+	c_file.close();
+	return adler32(str, length);
+//	return sha256(file_text);
 }
 
 void dir_runner(path main_p, ptree &pt){
@@ -45,30 +57,29 @@ void dir_runner(path main_p, ptree &pt){
 		if (is_directory(*dir_itr)) dir_runner(*dir_itr,pt);
 		if (is_regular_file(*dir_itr)){
 				path p = *dir_itr;
-				/*cout << p.string() << " size : " << file_size(*dir_itr)
-				<< " FILENAME : "<< p.filename() << endl;*/
-				ptree current_file;
-				current_file.put("FILENAME", p.filename().string());
-				current_file.put("File Hash in SHA2 ( 256 ) Format", hash_counter(p.string()));
-				current_file.put("File Size (Bytes)  ", file_size(*dir_itr) );
-				current_file.put("File Path", p.string());
-				pt.push_back(make_pair("", current_file));
+				file_output << p.string() << "\t\t" << file_size(*dir_itr/*p*/) << " bt"
+				<< "\t\t" << p.filename().string() << "\t\t" << hash_counter(p.string()) << endl;
 				}
 	}
 }
 
-ptree path_reader(){
-	cout << "Enter your path" << endl;
-	ptree pt;
-	ptree files_array;
-	path main_path = main_path_get();
-	dir_runner(main_path, files_array);
-	pt.add_child( "Path ( " + main_path.string() + " )  Files " , files_array);
-	return pt;
+void Start(path main_p) 
+{
+	ofstream file_output;
+	file_output.open("Tsv_MyProject.tsv");
+	file_output << "File Path: \t\t\t\t" << "SIZE: \t\t" << "FILE NAME: \t\t" << "FILE HASH: " << endl;
+	dir_runner(main_p, file_output);
+	file_output.close();
 }
 
-
 int main(){
-	write_json("Directory_Files_output.json", path_reader()); 
+	cout << "0----For creating a TSV file." << endl;
+	cout << "1----For looking for the changes of the olds." << endl;
+	int c;
+	cin >> c;
+	cin.get();
+	if (c == 0) { path file_path = file_path_get(); Start(file_path); }
+	else directory_scanner();
+	cin.get();
 	return 0;
 }
